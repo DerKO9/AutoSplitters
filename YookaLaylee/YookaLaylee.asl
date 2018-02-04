@@ -1,7 +1,7 @@
 
 //WARNING: This script breaks if you try to play Rextro's games from the main menu.
 
-state("YookaLaylee64", "NEW"){
+state("YookaLaylee64", "TEST"){
 	int loadingControl : "mono.dll", 0x00295BC8, 0x20, 0x2B8, 0x0, 0xC8, 0x170, 0x20, 0x64; //Values: Loading = 65537, Selecting file from menu = 65536, Not Loading = 1(after loading any level once) or 0(in the menu on game startup)
 }
 
@@ -28,7 +28,7 @@ init{
 	}
 	else if(MD5Hash == "CB12AA291173D934E2462D6C4537DF6C"){
 		print("NEW");		
-		version = "NEW";
+		version = "TEST";
 	}
 	else{
 		print("OLD");
