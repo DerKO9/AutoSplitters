@@ -23,12 +23,12 @@ init{
 	//print(MD5Hash.ToString()); //DEBUG
 	
 	if(MD5Hash == "79E639895D675A54A7C97B199CE33128"){
-		print("NEW");
-		version = "NEW";
+		print("OLD");
+		version = "OLD";
 	}
 	else if(MD5Hash == "CB12AA291173D934E2462D6C4537DF6C"){
-		print("OLD");		
-		version = "OLD";
+		print("NEW");		
+		version = "NEW";
 	}
 	else{
 		print("OLD");
