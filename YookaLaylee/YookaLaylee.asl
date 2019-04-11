@@ -58,7 +58,7 @@ init{
 		version = "NEW";
 	}
 	else{
-		version = "OLD";
+		version = "NEW";
 	}
 	
     vars.loading = false;				//Current status of loading or not loading
