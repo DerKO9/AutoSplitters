@@ -4,11 +4,14 @@
 state("YookaLaylee64", "NEW"){
 	int loadingControl : "mono.dll", 0x00295BC8, 0x20, 0x2B8, 0x0, 0xC8, 0x170, 0x20, 0x64; //Values: Loading = 65537, Selecting file from menu = 65536, Not Loading = 1(after loading any level once) or 0(in the menu on game startup)
 	
-	float CameraZ: "AkSoundEngine.dll", 0x1614E0; //Z coord of the camera
-	float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
-	float CameraX: "AkSoundEngine.dll", 0x1614D8; //X coord of the camera
+	//OldAddress float CameraZ: "AkSoundEngine.dll", 0x1614E0; //Z coord of the camera
+	//OldAddress float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
+	//OldAddress float CameraX: "AkSoundEngine.dll", 0x1614D8; //X coord of the camera
+	float CameraZ: "AkSoundEngine.dll", 0x198780; //Z coord of the camera
+	float CameraY: "AkSoundEngine.dll", 0x19877C; //Height of the camera
+	float CameraX: "AkSoundEngine.dll", 0x198778; //X coord of the camera
 	
-	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
+	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C //Number of spendable pagies
 }
 
 state("YookaLaylee64", "OLD"){
@@ -180,9 +183,11 @@ update{
 	//"loadingControl" somtimes goes to 0 in the loading screen and makes timer stutter, so we use the persistant "vars.loading" to turn it on or off.
 	if(current.loadingControl == 65537){ //Turns loading on
 		vars.loading = true;
+		print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Loading: True"); //DEBUG
 	}
 	else if(current.loadingControl == 1){ //Turns loading off
 		vars.loading = false;
+		print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Loading: False"); //DEBUG
 	}
 	
 	
