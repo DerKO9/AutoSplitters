@@ -1,9 +1,10 @@
 
-state("YookaLaylee64", "CurrentUpdate"){
-	//int loadingControl : "", 0x0; We are looking for an address(es) that can detect main menu vs. in-game vs. loading, preferably one address rather than two
+state("YLILWin64", "CurrentUpdate"){
+	int isLoadingA : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x98;
+	int isLoadingB : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x99;
 }
 
-state("YookaLaylee64", "LastUpdate"){
+state("YLILWin64", "LastUpdate"){
 	//Keeping track of the last version will help support the game on GoG which is usualy a version behind.
 	//No old versions yet. 
 }
@@ -19,8 +20,8 @@ init{
 	byte[] exeMD5HashBytes = new byte[0];
 	using (var md5 = System.Security.Cryptography.MD5.Create())
 	{
-		using (var s = File.Open(modules.First().FileName.Substring(0, modules.First().FileName.Length-17)
-		+ "YookaLaylee64_Data\\Managed\\Assembly-CSharp.dll", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+		using (var s = File.Open(modules.First().FileName.Substring(0, modules.First().FileName.Length-13)
+		+ "YLILWin64_Data\\Managed\\Assembly-CSharp.dll", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 		{
 			exeMD5HashBytes = md5.ComputeHash(s); 
 		} 
@@ -87,23 +88,24 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"current.loadingControl: " + current.loadingControl.ToString() + "\n" +
+			"current.isLoadingA: " + current.isLoadingA.ToString() + "\n" +
+			"current.isLoadingB: " + current.isLoadingB.ToString() + "\n" +
 			"loading: " + vars.loading + "\n");
 		}
 	});
 }
 
 start{
-	"loading" should have a value of ### as soon as you play file, then have a value of ### as it loads
-	if(current.loadingControl == Starting file){	//This happens when the file is selected
-		return true;						        //start the timer
-	}
+	// "loading" should have a value of ### as soon as you play file, then have a value of ### as it loads
+	// if(current.loadingControl == Starting file){	//This happens when the file is selected
+		// return true;						        //start the timer
+	// }
 }
 
 reset{
-	if(return to main menu?){
-		return true;
-	}
+	// if(return to main menu?){
+		// return true;
+	// }
 }
 
 isLoading{
@@ -113,18 +115,18 @@ isLoading{
 split{
 	vars.PeriodicLogging();
 	
-	if(Last hit of boss?){
-		return true;
-	}
+	// if(Last hit of boss?){
+		// return true;
+	// }
 }
 
 update{
 	//Update loading from loadingControl
-	if(current.loadingControl == 65537){ //Turns loading on
+	if(current.isLoadingA == 1 || current.isLoadingB == 1){ //Turns loading on
 		vars.loading = true;
 		
 	}
-	else if(current.loadingControl == 1){ //Turns loading off
+	else if(current.isLoadingA != 1 && current.isLoadingB != 1){ //Turns loading off
 		vars.loading = false;
 	}
 }
