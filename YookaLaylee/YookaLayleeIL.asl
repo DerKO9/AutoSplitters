@@ -2,6 +2,8 @@
 state("YLILWin64", "CurrentUpdate"){
 	int isLoadingA : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x98;
 	int isLoadingB : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x99;
+	int restartTrigger : "mono.dll", 0x00264A68, 0x50, 0xF40, 0xB0, 0x5C0;
+	int beeBreak : "mono.dll", 0x002675E0, 0x40, 0xE30, 0x90;
 }
 
 state("YLILWin64", "LastUpdate"){
@@ -11,8 +13,12 @@ state("YLILWin64", "LastUpdate"){
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
+	vars.SplitOnBeeBreakSettingName = "Split on freeing the bee at the end of a chapter";
+	vars.ILRunsModeSettingName = "Reset and start the timer upon restarting a level (For IL runs only. Other actions in the game will also trigger this.)";
 	
 	settings.Add(vars.LoggingSettingName, false);
+	settings.Add(vars.SplitOnBeeBreakSettingName, false);
+	settings.Add(vars.ILRunsModeSettingName, false);
 }
 
 init{
@@ -97,15 +103,15 @@ init{
 
 start{
 	// "loading" should have a value of ### as soon as you play file, then have a value of ### as it loads
-	// if(current.loadingControl == Starting file){	//This happens when the file is selected
-		// return true;						        //start the timer
-	// }
+	if(current.restartTrigger == 256){	//This happens when the file is selected
+		return true;						        //start the timer
+	}
 }
 
 reset{
-	// if(return to main menu?){
-		// return true;
-	// }
+	if(current.restartTrigger == 256 && old.restartTrigger == 257 && settings[vars.ILRunsModeSettingName]){
+		return true;						        //reset the timer
+	}
 }
 
 isLoading{
@@ -115,9 +121,9 @@ isLoading{
 split{
 	vars.PeriodicLogging();
 	
-	// if(Last hit of boss?){
-		// return true;
-	// }
+	if(current.beeBreak == 1 && old.beeBreak == 2 && settings[vars.SplitOnBeeBreakSettingName]){
+		return true;
+	}
 }
 
 update{
