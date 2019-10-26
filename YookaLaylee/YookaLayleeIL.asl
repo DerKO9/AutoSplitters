@@ -13,7 +13,7 @@ state("YLILWin64", "LastUpdate"){
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
-	vars.SplitOnBeeBreakSettingName = "Split on freeing the bee at the end of a chapter";
+	vars.SplitOnBeeBreakSettingName = "Split on freeing the bee at the end of a chapter (For IL runs only. Other actions in the game will also trigger this.)";
 	vars.ILRunsModeSettingName = "Reset and start the timer upon restarting a level (For IL runs only. Other actions in the game will also trigger this.)";
 	
 	settings.Add(vars.LoggingSettingName, false);
