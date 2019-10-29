@@ -13,7 +13,7 @@ state("YLILWin64", "LastUpdate"){
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
-	vars.SplitOnBeeBreakSettingName = "Split on freeing the bee at the end of a chapter (For IL runs only. Other actions in the game will also trigger this.)";
+	vars.SplitOnBeeBreakSettingName = "Split on freeing the bee at the end of a chapter";
 	vars.ILRunsModeSettingName = "Reset and start the timer upon restarting a level (For IL runs only. Other actions in the game will also trigger this.)";
 	
 	settings.Add(vars.LoggingSettingName, false);
@@ -103,7 +103,7 @@ init{
 
 start{
 	// "loading" should have a value of ### as soon as you play file, then have a value of ### as it loads
-	if(current.restartTrigger == 256){	//This happens when the file is selected
+	if(current.restartTrigger == 256 && settings[vars.ILRunsModeSettingName]){	//This happens when the file is selected
 		return true;						        //start the timer
 	}
 }
