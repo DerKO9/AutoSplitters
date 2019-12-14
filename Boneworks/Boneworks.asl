@@ -9,9 +9,11 @@ state("BONEWORKS", "CurrentUpdate"){
 
 startup{
 	vars.SplitOnLoadSettingName = "Split the timer on every loading screen";
+	vars.SkipSplitOnFirstLoadingScreenName = "Skip first loading screen";
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
 	
-	settings.Add(vars.SplitOnLoadSettingName, false);
+	settings.Add(vars.SplitOnLoadSettingName, true);
+	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip first loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.LoggingSettingName, false);
 }
 
@@ -35,7 +37,7 @@ init{
 		// version = "CurrentUpdate";
 	// }
 	
-	version = "LastUpdate";
+	vars.firstLoadSeen = 0;
 	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
@@ -88,7 +90,8 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"current.loading: " + current.loading.ToString() + "\n");
+			"current.loading: " + current.loading.ToString() + "\n" +
+			"vars.firstLoadSeen: " + vars.firstLoadSeen.ToString() + "\n");
 		}
 	});
 }
@@ -105,6 +108,7 @@ isLoading{
 
 start{
 	if(current.loading == true && old.loading == false){
+		vars.firstLoadSeen = 0;
 		return true;
 	}
 }
@@ -113,11 +117,20 @@ split{
 	vars.PeriodicLogging();
 	
 	if(current.loading == true && old.loading == false && settings[vars.SplitOnLoadSettingName]){
-		return true;
+		if(settings[vars.SkipSplitOnFirstLoadingScreenName]){
+			if(vars.firstLoadSeen == 1){
+				return true;
+			}
+		}
+		else{
+			return true;
+		}
+		vars.firstLoadSeen = 1;
 	}
 }
 
 update{
+	
 }
 
 
