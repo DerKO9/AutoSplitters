@@ -88,7 +88,7 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"current.isLoadingA: " + current.loading.ToString() + "\n");
+			"current.loading: " + current.loading.ToString() + "\n");
 		}
 	});
 }
