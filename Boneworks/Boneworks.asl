@@ -14,8 +14,8 @@ startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
 	
 	settings.Add(vars.SplitOnLoadSettingName, true);
-	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, false, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
-	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, false, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
+	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
+	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, true, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.LoggingSettingName, false);
 }
 
