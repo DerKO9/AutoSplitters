@@ -9,11 +9,13 @@ state("BONEWORKS", "CurrentUpdate"){
 
 startup{
 	vars.SplitOnLoadSettingName = "Split the timer on every loading screen";
-	vars.SkipSplitOnFirstLoadingScreenName = "Skip first loading screen";
+	vars.SkipSplitOnFirstLoadingScreenName = "Skip 1st loading screen";
+	vars.SkipSplitOnTenthLoadingScreenName = "Skip 10th loading screen";
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
 	
 	settings.Add(vars.SplitOnLoadSettingName, true);
-	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip first loading screen", vars.SplitOnLoadSettingName );
+	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, false, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
+	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, false, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.LoggingSettingName, false);
 }
 
@@ -37,7 +39,7 @@ init{
 		// version = "CurrentUpdate";
 	// }
 	
-	vars.firstLoadSeen = 0;
+	vars.loadCount = 0;
 	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
@@ -91,7 +93,7 @@ init{
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"current.loading: " + current.loading.ToString() + "\n" +
-			"vars.firstLoadSeen: " + vars.firstLoadSeen.ToString() + "\n");
+			"vars.loadCount: " + vars.loadCount.ToString() + "\n");
 		}
 	});
 }
@@ -108,7 +110,7 @@ isLoading{
 
 start{
 	if(current.loading == true && old.loading == false){
-		vars.firstLoadSeen = 0;
+		vars.loadCount = 0;
 		return true;
 	}
 }
@@ -118,14 +120,20 @@ split{
 	
 	if(current.loading == true && old.loading == false && settings[vars.SplitOnLoadSettingName]){
 		if(settings[vars.SkipSplitOnFirstLoadingScreenName]){
-			if(vars.firstLoadSeen == 1){
-				return true;
+			if(vars.loadCount == 0){
+				vars.loadCount++;
+				return false;
 			}
 		}
-		else{
-			return true;
+		if(settings[vars.SkipSplitOnTenthLoadingScreenName]){
+			if(vars.loadCount == 9){
+				vars.loadCount++;
+				return false;
+			}
 		}
-		vars.firstLoadSeen = 1;
+		vars.loadCount++;
+		vars.Log("-Splitting-");
+		return true;
 	}
 }
 
