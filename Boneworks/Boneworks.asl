@@ -1,7 +1,8 @@
 //Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
 
 state("BONEWORKS", "CurrentUpdate"){
-	bool loading : "vrclient_x64.dll", 0x3068EC;
+	//bool loading : "vrclient_x64.dll", 0x3068EC;
+	bool loading : "vrclient_x64.dll", 0x31FCAC
 }
 
 // state("BONEWORKS", "LastUpdate"){
