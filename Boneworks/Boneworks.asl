@@ -2,7 +2,8 @@
 
 state("BONEWORKS", "CurrentUpdate"){
 	//bool loading : "vrclient_x64.dll", 0x3068EC;
-	bool loading : "vrclient_x64.dll", 0x31FCAC;
+	//bool loading : "vrclient_x64.dll", 0x31FCAC;
+	bool loading : "vrclient_x64.dll", 321E6C;
 }
 
 // state("BONEWORKS", "LastUpdate"){
