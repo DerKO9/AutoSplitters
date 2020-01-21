@@ -3,16 +3,19 @@
 state("BONEWORKS", "UNKNOWN"){
 	int loading : "vrclient_x64.dll", 0x321E6C;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
 }
 
 state("BONEWORKS", "CurrentUpdate"){
 	int loading : "vrclient_x64.dll", 0x321E6C;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
 }
 
 state("BONEWORKS", "BETA"){
 	int loading : "vrclient_x64.dll", 0x32C3CC;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
 }
 
 
@@ -51,6 +54,7 @@ init{
 	}
 	
 	vars.currentLevel = 0;
+	vars.menuButtonCount = 0;
 	vars.loading = 0;
 	vars.loadCount = 0;
 	
@@ -110,13 +114,18 @@ init{
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"loading: " + vars.loading.ToString() + "\n" +
 			"loadCount: " + vars.loadCount.ToString() + "\n" +
-			"currentLevel: " + vars.currentLevel.ToString() + "\n");
+			"currentLevel: " + vars.currentLevel.ToString() + "\n" +
+			"menuButtonCount: " + vars.menuButtonCount.ToString() + "\n");
 		}
 	});
 }
 
 reset{
-	if(current.currentLevel == 1 && old.currentLevel != 1){
+	if(current.menuButtonCount == 8 && old.menuButtonCount == 0){
+		vars.Log("-Resetting-\n");
+		return true;
+	}
+	else if(current.currentLevel == 1 && old.currentLevel != 1){
 		vars.Log("-Resetting-\n");
 		return true;
 	}
@@ -137,6 +146,7 @@ start{
 split{
 	vars.currentLevel = current.currentLevel;
 	vars.loading = current.loading;
+	vars.menuButtonCount = current.menuButtonCount;
 	vars.PeriodicLogging();
 	
 	if(current.loading == 1 && old.loading == 0 && settings[vars.SplitOnLoadSettingName]){
