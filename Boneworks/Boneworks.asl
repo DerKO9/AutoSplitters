@@ -1,6 +1,12 @@
 //Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
 
-state("BONEWORKS", "UNKNOWN"){
+state("BONEWORKS", "UNKNOWN"){ //This should default to CurrentUpdate values
+	int loading : "vrclient_x64.dll", 0x321E6C;
+	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
+}
+
+state("BONEWORKS", "Could not read MD5"){ //This should default to CurrentUpdate values
 	int loading : "vrclient_x64.dll", 0x321E6C;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
 	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
@@ -33,24 +39,29 @@ startup{
 
 init{
 	//This code identifies different BONEWORKS versions with MD5 checksum on the vrclient_x64.dll.
-	byte[] exeMD5HashBytes = new byte[0];
-	using (var md5 = System.Security.Cryptography.MD5.Create())
-	{
-		using (var s = File.Open(modules.First().FileName.Substring(0, modules.First().FileName.Length-33) +
-			@"SteamVR\bin\vrclient_x64.dll", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+	vars.MD5Hash = new byte[0];
+	try{
+		byte[] exeMD5HashBytes = new byte[0];
+		using (var md5 = System.Security.Cryptography.MD5.Create())
 		{
-			exeMD5HashBytes = md5.ComputeHash(s); 
-		} 
-	}
-	vars.MD5Hash = exeMD5HashBytes.Select(x => x.ToString("X2")).Aggregate((a, b) => a + b);
-	if(vars.MD5Hash == "9EF2F08210C95EB942B945AA92387238"){
-		version = "BETA";
-	}
-	else if(vars.MD5Hash == "EF9F92F46EA844CDFD0E592CA1B2085D"){
-		version = "CurrentUpdate";
-	}
-	else{
-		version = "UNKNOWN"; //This should default to CurrentUpdate values
+			using (var s = File.Open(modules.Single(m => m.FileName.Contains("vrclient_x64")).FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			{
+				exeMD5HashBytes = md5.ComputeHash(s); 
+			}
+		}
+		vars.MD5Hash = exeMD5HashBytes.Select(x => x.ToString("X2")).Aggregate((a, b) => a + b);
+		if(vars.MD5Hash == "9EF2F08210C95EB942B945AA92387238"){
+			version = "BETA";
+		}
+		else if(vars.MD5Hash == "EF9F92F46EA844CDFD0E592CA1B2085D"){
+			version = "CurrentUpdate";
+		}
+		else{
+			version = "UNKNOWN";
+		}
+	}	
+	catch{
+		version = "Could not read MD5";
 	}
 	
 	vars.currentLevel = 0;
@@ -74,7 +85,7 @@ init{
 			vars.logwriter = File.AppendText(vars.logFileName);
 			
 			print(myString);
-			vars.logwriter.WriteLine(myString);
+			vars.logwriter.WriteLine(myString); 
 			
 			vars.logwriter.Close();
 			
