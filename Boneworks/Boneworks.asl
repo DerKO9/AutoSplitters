@@ -1,15 +1,31 @@
 //Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
 
 state("BONEWORKS", "UNKNOWN"){ //This should default to CurrentUpdate values
+	int loading : "vrclient_x64.dll", 0x321E6C;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
 	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
 }
 
+state("BONEWORKS", "Could not read MD5"){ //This should default to CurrentUpdate values
+	int loading : "vrclient_x64.dll", 0x321E6C;
+	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
+}
+
+state("BONEWORKS", "CurrentUpdate"){
+	int loading : "vrclient_x64.dll", 0x321E6C;
+	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
+}
+
+state("BONEWORKS", "BETA"){
+	int loading : "vrclient_x64.dll", 0x32C3CC;
+	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
+	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
+}
+
+
 startup{
-	vars.scanTarget = new SigScanTarget(-44, "49 6E 45 3F 00 00 00 00 B5 CB 41 BE");
-	
-	vars.logFileName = "BONEWORKS.log";
-	
 	vars.SplitOnLoadSettingName = "Split the timer on every loading screen";
 	vars.SkipSplitOnFirstLoadingScreenName = "Skip 1st loading screen";
 	vars.SkipSplitOnTenthLoadingScreenName = "Skip 10th loading screen";
@@ -21,34 +37,44 @@ startup{
 	settings.Add(vars.LoggingSettingName, false);
 }
 
-init{	
+init{
+	//This code identifies different BONEWORKS versions with MD5 checksum on the vrclient_x64.dll.
+	vars.MD5Hash = new byte[0];
+	try{
+		byte[] exeMD5HashBytes = new byte[0];
+		using (var md5 = System.Security.Cryptography.MD5.Create())
+		{
+			using (var s = File.Open(modules.Single(m => m.FileName.Contains("vrclient_x64")).FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			{
+				exeMD5HashBytes = md5.ComputeHash(s); 
+			}
+		}
+		vars.MD5Hash = exeMD5HashBytes.Select(x => x.ToString("X2")).Aggregate((a, b) => a + b);
+		if(vars.MD5Hash == "9EF2F08210C95EB942B945AA92387238"){
+			version = "BETA";
+		}
+		else if(vars.MD5Hash == "EF9F92F46EA844CDFD0E592CA1B2085D"){
+			version = "CurrentUpdate";
+		}
+		else{
+			version = "UNKNOWN";
+		}
+	}	
+	catch{
+		version = "Could not read MD5";
+	}
+	
+	vars.currentLevel = 0;
+	vars.menuButtonCount = 0;
+	vars.loading = 0;
+	vars.loadCount = 0;
+	
+	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
 	vars.timerSecondOLD = -1;
 	vars.timerSecond = 0;
 	vars.timerMinuteOLD = -1;
 	vars.timerMinute = 0;
-
-	ProcessModuleWow64Safe module = modules.SingleOrDefault(m => m.FileName.Contains("vrclient_x64"));
-	if (module == null) {
-		Thread.Sleep(1000);
-        throw new Exception("vrclient_x64 module not found");
-	}
-	var scanner = new SignatureScanner(game, module.BaseAddress, module.ModuleMemorySize);
-	var ptr = scanner.Scan(vars.scanTarget);
-	if (ptr == IntPtr.Zero) {
-        Thread.Sleep(1000);
-        throw new Exception("AOB not found");
-    }
-
-    vars.loading = new MemoryWatcher<byte>(ptr);
-
-    vars.watchers = new MemoryWatcherList() {
-        vars.loading,
-    };
-
-	vars.currentLevel = 0;
-	vars.menuButtonCount = 0;
-	vars.loadCount = 0;
 	
 	// If the logging setting is checked, this function logs game info to a log file.
 	// If the file reaches max size, it will delete the oldest entries.
@@ -76,6 +102,9 @@ init{
 	});
 	
 	// If a second/minute has passed, log important values.
+	// Cannot log state variables inside anonymous function, can only log vars variables:
+	// e.g. vars.log(current.loading) doesnt work but 
+	// vars.loading = current.loading, vars.log(vars.loading) works
 	vars.PeriodicLogging = (Action)( () => {
 		vars.timerMinute = timer.CurrentTime.RealTime.Value.Minutes;
 	
@@ -84,10 +113,7 @@ init{
 			
 			vars.Log("TimeOfDay: " + DateTime.Now.ToString() + "\n" +
 			"Version: " + version.ToString() + "\n" +
-			"settings[vars.SplitOnLoadSettingName]: " + settings[vars.SplitOnLoadSettingName].ToString() + "\n" +
-			"settings[vars.SkipSplitOnFirstLoadingScreenName]: " + settings[vars.SkipSplitOnFirstLoadingScreenName].ToString() + "\n" +
-			"settings[vars.SkipSplitOnTenthLoadingScreenName]: " + settings[vars.SkipSplitOnTenthLoadingScreenName].ToString() + "\n" +
-			"settings[vars.LoggingSettingName]: " + settings[vars.LoggingSettingName].ToString() + "\n");
+			"MD5Hash: " + vars.MD5Hash.ToString() + "\n");
 		}
 		
 		vars.timerSecond = timer.CurrentTime.RealTime.Value.Seconds;
@@ -97,16 +123,16 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"loading: " + vars.loading.Current.ToString() + "\n" +
+			"loading: " + vars.loading.ToString() + "\n" +
 			"loadCount: " + vars.loadCount.ToString() + "\n" +
-			"currentLevel: " + current.currentLevel.ToString() + "\n" +
-			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n");
+			"currentLevel: " + vars.currentLevel.ToString() + "\n" +
+			"menuButtonCount: " + vars.menuButtonCount.ToString() + "\n");
 		}
 	});
 }
 
 reset{
-	if(current.menuButtonCount == 8){
+	if(current.menuButtonCount == 8 && old.menuButtonCount == 0){
 		vars.Log("-Resetting-\n");
 		return true;
 	}
@@ -117,11 +143,11 @@ reset{
 }
 
 isLoading{
-	return vars.loading.Current == 1; //stops timer when loading is 1
+	return current.loading == 1; //stops timer when loading is 1
 }
 
 start{
-	if(vars.loading.Current == 1 && vars.loading.Old == 0){
+	if(current.loading == 1 && old.loading == 0){
 		vars.loadCount = 0;
 		vars.Log("-Starting-\n");
 		return true;
@@ -130,10 +156,11 @@ start{
 
 split{
 	vars.currentLevel = current.currentLevel;
+	vars.loading = current.loading;
 	vars.menuButtonCount = current.menuButtonCount;
 	vars.PeriodicLogging();
 	
-	if(vars.loading.Current == 1 && vars.loading.Old == 0 && settings[vars.SplitOnLoadSettingName]){
+	if(current.loading == 1 && old.loading == 0 && settings[vars.SplitOnLoadSettingName]){
 		if(settings[vars.SkipSplitOnFirstLoadingScreenName]){
 			if(vars.loadCount == 0){
 				vars.loadCount++;
@@ -153,8 +180,9 @@ split{
 }
 
 update{
-	vars.watchers.UpdateAll(game);
+	
 }
+
 
 // Performance Tool:
 
