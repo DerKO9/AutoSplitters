@@ -121,6 +121,15 @@ init{
 		if(vars.timerMinute != vars.timerMinuteOLD){
 			vars.timerMinuteOLD = vars.timerMinute;
 			
+			vars.loadingAOB = "";
+			var baseOffset = 0;
+			baseOffset = 0x321E6C;
+			if(version == "BETA" || version == "UNKNOWN") baseOffset = 0x339F14;
+			byte[] aob = new DeepPointer("vrclient_x64.dll", baseOffset, new int[0]).DerefBytes(game, 250);
+			foreach(byte b in aob){
+				vars.loadingAOB += b.ToString("X2") + " ";
+			}
+			
 			vars.Log("TimeOfDay: " + DateTime.Now.ToString() + "\n" +
 			"Version: " + version.ToString() + "\n" +
 			"MD5Hash: " + vars.MD5Hash.ToString() + "\n" +
