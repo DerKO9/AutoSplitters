@@ -1,7 +1,7 @@
 //Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
 
 state("BONEWORKS", "UNKNOWN"){ //This should default to CurrentUpdate values
-	int loading : "vrclient_x64.dll", 0x321E6C;
+	int loading : "vrclient_x64.dll", 0x339F14;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
 	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
 }
@@ -19,7 +19,7 @@ state("BONEWORKS", "CurrentUpdate"){
 }
 
 state("BONEWORKS", "BETA"){
-	int loading : "vrclient_x64.dll", 0x32C3CC;
+	int loading : "vrclient_x64.dll", 0x339F14;
 	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
 	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
 }
@@ -34,7 +34,7 @@ startup{
 	settings.Add(vars.SplitOnLoadSettingName, true);
 	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, true, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
-	settings.Add(vars.LoggingSettingName, false);
+	settings.Add(vars.LoggingSettingName, true);
 }
 
 init{
@@ -50,7 +50,7 @@ init{
 			}
 		}
 		vars.MD5Hash = exeMD5HashBytes.Select(x => x.ToString("X2")).Aggregate((a, b) => a + b);
-		if(vars.MD5Hash == "9EF2F08210C95EB942B945AA92387238"){
+		if(vars.MD5Hash == "A1889E933415EFA3F50D7E0721C09B2D"){ 
 			version = "BETA";
 		}
 		else if(vars.MD5Hash == "EF9F92F46EA844CDFD0E592CA1B2085D"){
@@ -62,6 +62,16 @@ init{
 	}	
 	catch{
 		version = "Could not read MD5";
+	}
+	
+	// Logs AOB from pointer to improve AOB consistency
+	vars.loadingAOB = "";
+	var baseOffset = 0;
+	if(version == "CurrentUpdate") baseOffset = 0x321E6C;
+	if(version == "BETA" || version == "UNKNOWN") baseOffset = 0x339F14;
+	byte[] aob = new DeepPointer("vrclient_x64.dll", baseOffset, new int[0]).DerefBytes(game, 250);
+	foreach(byte b in aob){
+		vars.loadingAOB += b.ToString("X2") + " ";
 	}
 	
 	vars.currentLevel = 0;
@@ -113,7 +123,12 @@ init{
 			
 			vars.Log("TimeOfDay: " + DateTime.Now.ToString() + "\n" +
 			"Version: " + version.ToString() + "\n" +
-			"MD5Hash: " + vars.MD5Hash.ToString() + "\n");
+			"MD5Hash: " + vars.MD5Hash.ToString() + "\n" +
+			"settings[vars.SplitOnLoadSettingName]: " + settings[vars.SplitOnLoadSettingName].ToString() + "\n" +
+			"settings[vars.SkipSplitOnFirstLoadingScreenName]: " + settings[vars.SkipSplitOnFirstLoadingScreenName].ToString() + "\n" +
+			"settings[vars.SkipSplitOnTenthLoadingScreenName]: " + settings[vars.SkipSplitOnTenthLoadingScreenName].ToString() + "\n" +
+			"settings[vars.LoggingSettingName]: " + settings[vars.LoggingSettingName].ToString() + "\n" +
+			"loadingAOB: " + vars.loadingAOB + "\n");
 		}
 		
 		vars.timerSecond = timer.CurrentTime.RealTime.Value.Seconds;
