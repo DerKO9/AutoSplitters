@@ -35,6 +35,9 @@ startup{
 	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, true, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.LoggingSettingName, true);
+	
+	vars.logFileName = "BONEWORKS.log";
+	vars.maxFileSize = 4000000;
 }
 
 init{
@@ -79,8 +82,6 @@ init{
 	vars.loading = 0;
 	vars.loadCount = 0;
 	
-	vars.logFileName = "BONEWORKS.log";
-	vars.maxFileSize = 4000000;
 	vars.timerSecondOLD = -1;
 	vars.timerSecond = 0;
 	vars.timerMinuteOLD = -1;
@@ -120,6 +121,13 @@ init{
 	
 		if(vars.timerMinute != vars.timerMinuteOLD){
 			vars.timerMinuteOLD = vars.timerMinute;
+			
+			// Logs AOB from pointer to improve AOB consistency
+			vars.loadingAOB = "";
+			aob = new DeepPointer("vrclient_x64.dll", baseOffset, new int[0]).DerefBytes(game, 250);
+			foreach(byte b in aob){
+				vars.loadingAOB += b.ToString("X2") + " ";
+			}
 			
 			vars.Log("TimeOfDay: " + DateTime.Now.ToString() + "\n" +
 			"Version: " + version.ToString() + "\n" +
@@ -164,6 +172,10 @@ isLoading{
 start{
 	if(current.loading == 1 && old.loading == 0){
 		vars.loadCount = 0;
+		vars.timerSecondOLD = -1;
+		vars.timerSecond = 0;
+		vars.timerMinuteOLD = -1;
+		vars.timerMinute = 0;
 		vars.Log("-Starting-\n");
 		return true;
 	}
