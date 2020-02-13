@@ -50,7 +50,7 @@ state("YLILWin64", "EGS V1"){
 	byte isInteractable : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x330, 0x398, 0x23;
 	byte restartTrigger : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x258, 0x80, 0x60;
 	byte beeBreak : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x2D8, 0x80, 0x0, 0x278, 0x68, 0x30;
-	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0xC0, 0x28, 0x30, 0x30, 0x138, 0x28, 0x28, 0xA6; //Has failed once I think
+	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0xC0, 0x28, 0x30, 0x30, 0x138, 0x28, 0x28, 0xA6; //Fails sometimes
 	int owTonics : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x68, 0x28, 0x28, 0x18, 0x28;
 	int capBHP : "UnityPlayer.dll", 0x0144DD68, 0x170, 0x10, 0x30, 0x190, 0x1F0, 0x118, 0x78, 0x34; //Unconfirmed if working
 }
@@ -212,13 +212,14 @@ reset{
 }
 
 isLoading{
-	if(current.isLoading == 1 && current.isInteractable == 0 && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && !settings[vars.OWTonics]
-	|| current.isRunningTasks == 1 && version == "EGS V1" && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && !settings[vars.OWTonics]
-	|| current.isRunningTasks == 1 && version == "EGS V1" && current.playerControl == 0 && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && settings[vars.OWTonics] //Because the start of EGS OWT pauses a few seconds, and will continue to do so if control pointer fails
-	|| settings[vars.OWTonics] && current.isLoading == 1 && current.isInteractable == 0 && current.playerControl == 0
-	|| settings[vars.TestDelaysRestart] && current.restartTrigger == 1 && current.playerControl == 1
-	|| settings[vars.TestDelaysBeeBreakToLoad] && current.beeBreak == 1 && current.isLoading == 1){
-		return true;						        //1st line is the standard timer pause when loading
+	if(current.isLoading == 1 && current.isInteractable == 0 && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && !settings[vars.OWTonics] //Standard timer pause when loading
+	|| current.isRunningTasks == 1 && version == "EGS V1" && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && !settings[vars.OWTonics] //Loading fix to bring EGS load removal in line with SteamV2, excluded in OWT, but addressed below
+	//May need these EGS fixes for Steam V1 as well.
+	|| settings[vars.OWTonics] && current.isLoading == 1 && current.isInteractable == 0 && current.playerControl == 0 //OWTonics standard load removal
+	|| settings[vars.OWTonics] && current.isRunningTasks == 1 && current.isInteractable == 0 && current.playerControl == 0 && version == "EGS V1" //Fix for the start of EGS OWT pausing a few seconds, which will keep happening if Control pointer fails
+	|| settings[vars.TestDelaysRestart] && current.restartTrigger == 1 && current.playerControl == 1 //Pauses timer when you gain control with the restart delay test setting
+	|| settings[vars.TestDelaysBeeBreakToLoad] && current.beeBreak == 1 && current.isLoading == 1){ //Pauses timer when you hit a load after the 2D beeBreak sequence with the delay test setting
+		return true;						        //Pauses the timer
 	}
 	else{
 		return false;
