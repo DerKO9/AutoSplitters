@@ -70,7 +70,7 @@ state("YLILWin64", "Demo V1"){
 
 startup{
 	vars.ILRunsMode = "IL Mode: Reset, Start, and Splitting at end of level";
-	vars.OWTonics = "Overworld Tonics: Start on OW Control, Split on Tonics (60 splits!)";
+	vars.OWTonics = "Overworld Tonics: Start on OW Control, Split on grabbed Tonics (59 splits!)";
 	vars.Logging = "Debug Logging (Log files help solve auto-splitting issues)";
 	vars.TestDelaysRestart = "Test delay times: Transitions to Player Control. (Restarts & OW warps)";
 	vars.TestDelaysBeeBreakToLoad = "Test delay times: IL Bee Break to Loading";
