@@ -3,6 +3,7 @@
 	ASL originally by DerKO with some revamps by CptBrian ♥
 */
 state("YLILWin64", "Unknown Version"){     //Defaults to Steam V2 values
+	byte isRunningTasks : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x97;
 	byte isLoading : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x98;
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "UnityPlayer.dll", 0x014498E0, 0x2C8, 0x118, 0x60;
@@ -10,6 +11,7 @@ state("YLILWin64", "Unknown Version"){     //Defaults to Steam V2 values
 	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0x198, 0xA68, 0x200, 0x10, 0x388, 0x28, 0xA6;
 }
 state("YLILWin64", "Steam V1"){
+	byte isRunningTasks : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x97;
 	byte isLoading : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x98;
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "mono.dll", 0x00264A68, 0x50, 0xF40, 0xB0, 0x5C0;
@@ -17,6 +19,7 @@ state("YLILWin64", "Steam V1"){
 	byte playerControl : "UnityPlayer.dll", 0x014A4550, 0x3C0, 0x2B8, 0x10, 0x3A8, 0x2F0, 0x10, 0xC8;
 }
 state("YLILWin64", "Steam V2"){
+	byte isRunningTasks : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x97;
 	byte isLoading : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x98;
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "UnityPlayer.dll", 0x014498E0, 0x2C8, 0x118, 0x60;
@@ -24,13 +27,15 @@ state("YLILWin64", "Steam V2"){
 	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0x198, 0xA68, 0x200, 0x10, 0x388, 0x28, 0xA6;
 }
 state("YLILWin64", "EGS V1"){
+	byte isRunningTasks : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x330, 0x398, 0x20;
 	byte isLoading : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x330, 0x398, 0x21;
 	byte isInteractable : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x330, 0x398, 0x23;
 	byte restartTrigger : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x258, 0x80, 0x60;
 	byte beeBreak : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x2D8, 0x80, 0x0, 0x278, 0x68, 0x30;
-	byte playerControl : "UnityPlayer.dll", 0x014A4550, 0x450, 0xB90, 0x3A8, 0xE8, 0x90, 0x330, 0xC8;
+	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0xC0, 0x28, 0x30, 0x30, 0x138, 0x28, 0x28, 0xA6;
 }
 state("YLILWin64", "Demo V1"){
+	byte isRunningTasks : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x97;
 	byte isLoading : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x98;
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "UnityPlayer.dll", 0x01449870, 0x5D8, 0x430, 0x11E8, 0x60;
@@ -171,6 +176,7 @@ reset{
 
 isLoading{
 	if(current.isLoading == 1 && current.isInteractable == 0 && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad]
+	|| current.isRunningTasks == 1 && version == "EGS V1" && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad]
 	|| settings[vars.TestDelaysRestart] && current.restartTrigger == 1 && current.playerControl == 1
 	|| settings[vars.TestDelaysBeeBreakToLoad] && current.beeBreak == 1 && current.isLoading == 1){
 		return true;						        //1st line is the standard timer pause when loading
