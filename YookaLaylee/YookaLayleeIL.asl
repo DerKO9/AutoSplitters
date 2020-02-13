@@ -213,7 +213,8 @@ reset{
 
 isLoading{
 	if(current.isLoading == 1 && current.isInteractable == 0 && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && !settings[vars.OWTonics]
-	|| current.isRunningTasks == 1 && version == "EGS V1" && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad]
+	|| current.isRunningTasks == 1 && version == "EGS V1" && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && !settings[vars.OWTonics]
+	|| current.isRunningTasks == 1 && version == "EGS V1" && current.playerControl == 0 && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad] && settings[vars.OWTonics] //Because the start of EGS OWT pauses a few seconds, and will continue to do so if control pointer fails
 	|| settings[vars.OWTonics] && current.isLoading == 1 && current.isInteractable == 0 && current.playerControl == 0
 	|| settings[vars.TestDelaysRestart] && current.restartTrigger == 1 && current.playerControl == 1
 	|| settings[vars.TestDelaysBeeBreakToLoad] && current.beeBreak == 1 && current.isLoading == 1){
