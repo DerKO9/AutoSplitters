@@ -1,8 +1,8 @@
 //Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
 
 state("BONEWORKS"){ //This should default to CurrentUpdate values
-	int currentLevel : "GameAssembly.dll", 0x01C2B090, 0xD70;
-	int menuButtonCount : "GameAssembly.dll", 0x01C37B80, 0xB8, 0x480, 0x18
+	int currentLevel : "GameAssembly.dll", 0x01C80340, 0xB8, 0x1F0;
+	int menuButtonCount : "UnityPlayer.dll", 0x014F1218, 0xAA8, 0x160, 0xB8, 0x870, 0x18; //Number of menu buttons displayed
 }
 
 startup{
