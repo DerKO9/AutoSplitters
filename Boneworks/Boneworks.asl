@@ -14,11 +14,13 @@ startup{
 	vars.SplitOnLoadSettingName = "Split the timer on every loading screen";
 	vars.SkipSplitOnFirstLoadingScreenName = "Skip 1st loading screen";
 	vars.SkipSplitOnTenthLoadingScreenName = "Skip 10th loading screen";
+	vars.StartTimerFromWithinLevelsName = "Start timer on selecting new level from within a level. Turn off for full game runs.";
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
 	
 	settings.Add(vars.SplitOnLoadSettingName, true);
 	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, true, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
+	settings.Add(vars.StartTimerFromWithinLevelsName, false);
 	settings.Add(vars.LoggingSettingName, false);
 }
 
@@ -120,9 +122,11 @@ isLoading{
 
 start{
 	if(vars.loading.Current == 1 && vars.loading.Old == 0){
-		vars.loadCount = 0;
-		vars.Log("-Starting-\n");
-		return true;
+		if(settings[vars.StartTimerFromWithinLevelsName] || current.currentLevel == 1){
+			vars.loadCount = 0;
+			vars.Log("-Starting-\n");
+			return true;
+		}
 	}
 }
 
