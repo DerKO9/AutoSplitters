@@ -80,7 +80,7 @@ state("YLILWin64", "Demo V1"){
 
 startup{
 	vars.ILRunsMode = "IL Mode: Start on control, Auto-Reset, and Splitting on hive break";
-	vars.beeSplits = "Split on all bees (not for ILs) - Only for Steam V2 right now!";
+	vars.beeSplits = "Split on all bees (not for IL Mode) - Only on Steam V2 for now!";
 	vars.OWTonics = "Overworld Tonics: Start on OW Control, Split on OW Tonics (59 splits!)";
 	vars.Logging = "Debug Logging (Log files help solve auto-splitting issues)";
 	vars.TestDelaysRestart = "Test delay times: Transitions to Player Control. (Restarts & OW warps)";
