@@ -11,9 +11,11 @@ state("YLILWin64", "Unknown Version"){     //Defaults to Steam V2 values
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "UnityPlayer.dll", 0x014498E0, 0x2C8, 0x118, 0x60;
 	byte beeBreak : "mono.dll", 0x002675E0, 0x40, 0xE30, 0x90;
+	byte interactableBook : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA4;
 	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA6;
 	int owTonics : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x8, 0x8, 0x2D8, 0x28, 0x18, 0x28;
 	int capBHP : "UnityPlayer.dll", 0x0144DD68, 0x170, 0x10, 0x30, 0x190, 0x1F0, 0x118, 0x78, 0x34;
+	int beeTotal : "mono.dll", 0x00268180, 0x50, 0xF50, 0x0, 0x0, 0x20, 0x38, 0xB0, 0x40, 0x28, 0xA8, 0x18, 0x2C;
 }
 state("YLILWin64", "Steam V1"){
 	float XPos : "UnityPlayer.dll", 0x0144DD68, 0x128, 0x18, 0x10, 0xA0;
@@ -24,9 +26,11 @@ state("YLILWin64", "Steam V1"){
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "mono.dll", 0x00264A68, 0x50, 0xF40, 0xB0, 0x5C0;
 	byte beeBreak : "mono.dll", 0x002675E0, 0x40, 0xE30, 0x90;
+	byte interactableBook : "UnityPlayer.dll", 0x014A4550, 0x3C0, 0x2B8, 0x10, 0x3A8, 0x2F0, 0x10, 0xC6; //Needs replacement from true player control
 	byte playerControl : "UnityPlayer.dll", 0x014A4550, 0x3C0, 0x2B8, 0x10, 0x3A8, 0x2F0, 0x10, 0xC8; //Needs replacement for true player control
 	int owTonics : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x8, 0x8, 0x2D8, 0x28, 0x18, 0x28; //Unconfirmed if working
 	int capBHP : "UnityPlayer.dll", 0x0144DD68, 0x170, 0x10, 0x30, 0x190, 0x1F0, 0x118, 0x78, 0x34; //Unconfirmed if working
+	int beeTotal : "mono.dll", 0x00268180, 0x50, 0xF50, 0x0, 0x0, 0x20, 0x38, 0xB0, 0x40, 0x28, 0xA8, 0x18, 0x2C; //Unconfirmed if working
 }
 state("YLILWin64", "Steam V2"){
 	float XPos : "UnityPlayer.dll", 0x0144DD68, 0x128, 0x18, 0x10, 0xA0;
@@ -37,9 +41,11 @@ state("YLILWin64", "Steam V2"){
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "UnityPlayer.dll", 0x014498E0, 0x2C8, 0x118, 0x60;
 	byte beeBreak : "mono.dll", 0x002675E0, 0x40, 0xE30, 0x90;
-	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA6;
+	byte interactableBook : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA4; //Not perfect.
+	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA6; //Not perfect.
 	int owTonics : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x8, 0x8, 0x2D8, 0x28, 0x18, 0x28;
 	int capBHP : "UnityPlayer.dll", 0x0144DD68, 0x170, 0x10, 0x30, 0x190, 0x1F0, 0x118, 0x78, 0x34;
+	int beeTotal : "mono.dll", 0x00268180, 0x50, 0xF50, 0x0, 0x0, 0x20, 0x38, 0xB0, 0x40, 0x28, 0xA8, 0x18, 0x2C;
 }
 state("YLILWin64", "EGS V1"){
 	float XPos : "UnityPlayer.dll", 0x0144DD68, 0x128, 0x18, 0x10, 0xA0;
@@ -50,9 +56,11 @@ state("YLILWin64", "EGS V1"){
 	byte isInteractable : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x330, 0x398, 0x23;
 	byte restartTrigger : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x258, 0x80, 0x60;
 	byte beeBreak : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x2D8, 0x80, 0x0, 0x278, 0x68, 0x30;
+	byte interactableBook : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0xC0, 0x28, 0x30, 0x30, 0x138, 0x28, 0x28, 0xA4; //Fails sometimes
 	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x0, 0xC0, 0x28, 0x30, 0x30, 0x138, 0x28, 0x28, 0xA6; //Fails sometimes
 	int owTonics : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x68, 0x28, 0x28, 0x18, 0x28;
 	int capBHP : "UnityPlayer.dll", 0x0144DD68, 0x170, 0x10, 0x30, 0x190, 0x1F0, 0x118, 0x78, 0x34; //Unconfirmed if working
+	int beeTotal : "mono.dll", 0x00268180, 0x50, 0xF50, 0x0, 0x0, 0x20, 0x38, 0xB0, 0x40, 0x28, 0xA8, 0x18, 0x2C; //Unconfirmed if working
 }
 state("YLILWin64", "Demo V1"){
 	float XPos : "UnityPlayer.dll", 0x0144DD68, 0x128, 0x18, 0x10, 0xA0;
@@ -63,19 +71,23 @@ state("YLILWin64", "Demo V1"){
 	byte isInteractable : "mono.dll", 0x002675E0, 0x48, 0xE68, 0x98, 0x9A;
 	byte restartTrigger : "UnityPlayer.dll", 0x01449870, 0x5D8, 0x430, 0x11E8, 0x60;
 	byte beeBreak : "mono.dll", 0x002675E0, 0x40, 0xE30, 0x90;
+	byte interactableBook : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA4; //Needs replacement from true player control
 	byte playerControl : "UnityPlayer.dll", 0x013B4AE0, 0x2A8, 0xD0, 0x70, 0x358, 0xB0, 0x188, 0xA6; //Needs replacement for true player control
 	int owTonics : "UnityPlayer.dll", 0x0144DBD8, 0x8, 0x8, 0x8, 0x2D8, 0x28, 0x18, 0x28; //Unconfirmed if working
 	int capBHP : "UnityPlayer.dll", 0x0144DD68, 0x170, 0x10, 0x30, 0x190, 0x1F0, 0x118, 0x78, 0x34; //Unconfirmed if working
+	int beeTotal : "mono.dll", 0x00268180, 0x50, 0xF50, 0x0, 0x0, 0x20, 0x38, 0xB0, 0x40, 0x28, 0xA8, 0x18, 0x2C; //Unconfirmed if working
 }
 
 startup{
-	vars.ILRunsMode = "IL Mode: Reset, Start, and Splitting at end of level";
+	vars.ILRunsMode = "IL Mode: Start on control, Auto-Reset, and Splitting on hive break";
+	vars.beeSplits = "Split on all bees (not for ILs) - Only for Steam V2 right now!";
 	vars.OWTonics = "Overworld Tonics: Start on OW Control, Split on OW Tonics (59 splits!)";
 	vars.Logging = "Debug Logging (Log files help solve auto-splitting issues)";
 	vars.TestDelaysRestart = "Test delay times: Transitions to Player Control. (Restarts & OW warps)";
 	vars.TestDelaysBeeBreakToLoad = "Test delay times: IL Bee Break to Loading";
 	
 	settings.Add(vars.ILRunsMode, false);
+	settings.Add(vars.beeSplits, false);
 	settings.Add(vars.OWTonics, false);
 	settings.Add(vars.Logging, false);
 	settings.Add(vars.TestDelaysRestart, false);
@@ -175,6 +187,7 @@ init{
 			"isInteractable: " + current.isInteractable + "\n" +
 			"restartTrigger: " + current.restartTrigger + "\n" +
 			"beeBreak: " + current.beeBreak + "\n" +
+			"interactableBook: " + current.interactableBook + "\n" +
 			"playerControl: " + current.playerControl + "\n" +
 			"owTonics: " + current.owTonics + "\n" +
 			"capBHP: " + current.capBHP + "\n");
@@ -183,7 +196,7 @@ init{
 }
 
 start{
-	if(current.restartTrigger == 1 && current.playerControl == 1 && old.playerControl == 0 && timer.CurrentPhase != TimerPhase.Running && settings[vars.ILRunsMode] && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad]){
+	if(current.restartTrigger == 1 && current.playerControl == 1 && old.playerControl == 0 && current.interactableBook != 1 && timer.CurrentPhase != TimerPhase.Running && settings[vars.ILRunsMode] && !settings[vars.TestDelaysRestart] && !settings[vars.TestDelaysBeeBreakToLoad]){
 		vars.Log("-Starting-\n");
 		return true;						        //Start timer for normal ILs
 	}
@@ -230,6 +243,10 @@ split{
 	vars.PeriodicLogging();
 	
 	if(current.beeBreak == 1 && old.beeBreak == 2 && settings[vars.ILRunsMode]){
+		vars.Log("-Splitting-\n");
+		return true;
+	}
+	else if((current.beeTotal - old.beeTotal) == 1 && settings[vars.beeSplits]){
 		vars.Log("-Splitting-\n");
 		return true;
 	}
