@@ -19,7 +19,7 @@ startup{
 	settings.Add(vars.SplitOnLoadSettingName, true);
 	settings.Add(vars.SkipSplitOnFirstLoadingScreenName, true, "Skip 1st loading screen", vars.SplitOnLoadSettingName );
 	settings.Add(vars.SkipSplitOnTenthLoadingScreenName, true, "Skip 10th loading screen", vars.SplitOnLoadSettingName );
-	settings.Add(vars.LoggingSettingName, false);
+	settings.Add(vars.LoggingSettingName, true);
 }
 
 init{
