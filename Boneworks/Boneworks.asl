@@ -104,11 +104,11 @@ init{
 }
 
 reset{
-	if(current.menuButtonCount == 8 && old.menuButtonCount != 8){
+	if(current.menuButtonCount == 8 && old.menuButtonCount == 0){
 		vars.Log("-Resetting-\n");
 		return true;
 	}
-	else if(current.currentLevel == 1 && old.currentLevel != 1){
+	else if(current.currentLevel == 1 && old.currentLevel != 1 && old.currentLevel != 15){
 		vars.Log("-Resetting-\n");
 		return true;
 	}
