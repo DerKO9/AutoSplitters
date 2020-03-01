@@ -182,7 +182,17 @@ init{
 			vars.Log("\n" + "TimeOfDay: " + DateTime.Now.ToString() + "\n" +
 			"Version: " + version.ToString() + "\n" +
 			"MD5Hash: " + vars.MD5Hash.ToString() + "\n" +
-			"ILRunsMode:" + settings[vars.ILRunsMode].ToString() + "\n");
+			"ILRunsMode:" + settings[vars.ILRunsMode].ToString() + "\n" +
+			"TutStart:" + settings[vars.TutStart].ToString() + "\n" +
+			"LairSplits:" + settings[vars.LairSplits].ToString() + "\n" +
+			"LairSplitFromTut:" + settings["LairSplitFromTut"].ToString() + "\n" +
+			"EntrySplits:" + settings[vars.EntrySplits].ToString() + "\n" +
+			"BeeSplits:" + settings[vars.BeeSplits].ToString() + "\n" +
+			"TonicSplits:" + settings[vars.TonicSplits].ToString() + "\n" +
+			"PagieSplits:" + settings[vars.PagieSplits].ToString() + "\n" +
+			"OWCat:" + settings[vars.OWCat].ToString() + "\n" +
+			"TestDelaysRestart:" + settings["TestDelaysRestart"].ToString() + "\n" +
+			"TestDelaysBeeBreakToLoad:" + settings["TestDelaysBeeBreakToLoad"].ToString() + "\n");
 		}
 	
 		vars.timerSecond = timer.CurrentTime.RealTime.Value.Seconds;
@@ -191,7 +201,21 @@ init{
 			vars.timerSecondOLD = vars.timerSecond;
 			
 			vars.Log("RealTime: " + timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"GameTime: " + timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n");
+			"GameTime: " + timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
+			"XPos: " + current.XPos + "\n" +
+			"YPos: " + current.YPos + "\n" +
+			"ZPos: " + current.ZPos + "\n" +
+			"isRunningTasks: " + current.isRunningTasks + "\n" +
+			"isLoading: " + current.isLoading + "\n" +
+			"isInteractable: " + current.isInteractable + "\n" +
+			"restartTrigger: " + current.restartTrigger + "\n" +
+			"beeBreak: " + current.beeBreak + "\n" +
+			"interactableBook: " + current.interactableBook + "\n" +
+			"playerControl: " + current.playerControl + "\n" +
+			"owTonics: " + current.owTonics + "\n" +
+			"beeTotal: " + current.beeTotal + "\n" +
+			"Level: " + current.Level + "\n" +
+			"LevelLoad: " + current.LevelLoad + "\n");
 		}
 	});
 }
