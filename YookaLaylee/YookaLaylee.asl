@@ -13,7 +13,7 @@ state("YookaLaylee64", "NEW"){
 	
 	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
 	
-	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xEF8, 0x0, 0x20, 0x18, 0x78, 0x68, 0x70, 0x69;
+	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xE70, 0x20, 0x10, 0x20, 0x18, 0x78, 0x68, 0x70, 0x69;
 }
 
 state("YookaLaylee64", "OLD"){
@@ -26,12 +26,12 @@ state("YookaLaylee64", "OLD"){
 	
 	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
 	
-	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xEF8, 0x0, 0x20, 0x18, 0x78, 0x68, 0x70, 0x69;
+	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xE70, 0x20, 0x10, 0x20, 0x18, 0x78, 0x68, 0x70, 0x69; //Probably doesn't work on old version, but final 5 offsets may be the same.
 }
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
-	vars.LagRemoval = "Remove Lags from switching graphics quality (needs better pointer)";
+	vars.LagRemoval = "Remove Lags from switching graphics quality (in-game)";
 	vars.SecondPhaseSplitSettingName = "Split at start of 2nd phase of CapB fight";
 	vars.ThirdPhaseSplitSettingName = "Split at start of 3rd phase of CapB fight";
 	vars.MissilesSplitSettingName = "Split at start of Missiles of CapB fight";
