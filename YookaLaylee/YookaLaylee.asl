@@ -11,7 +11,9 @@ state("YookaLaylee64", "NEW"){
 	float CameraY: "AkSoundEngine.dll", 0x19877C; //Height of the camera
 	float CameraX: "AkSoundEngine.dll", 0x198778; //X coord of the camera
 	
-	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C //Number of spendable pagies
+	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
+	
+	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xEF8, 0x0, 0x20, 0x18, 0x78, 0x68, 0x70, 0x69;
 }
 
 state("YookaLaylee64", "OLD"){
@@ -22,11 +24,14 @@ state("YookaLaylee64", "OLD"){
 	float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
 	float CameraX: "AkSoundEngine.dll", 0x1614D8; //X coord of the camera
 	
-	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C //Number of spendable pagies
+	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
+	
+	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xEF8, 0x0, 0x20, 0x18, 0x78, 0x68, 0x70, 0x69;
 }
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
+	vars.LagRemoval = "Remove Lags from switching graphics quality";
 	vars.SecondPhaseSplitSettingName = "Split at start of 2nd phase of CapB fight";
 	vars.ThirdPhaseSplitSettingName = "Split at start of 3rd phase of CapB fight";
 	vars.MissilesSplitSettingName = "Split at start of Missiles of CapB fight";
@@ -34,6 +39,7 @@ startup{
 	vars.LoadsSplitSettingName = "Split on total number of loads (Probably Broken)";
 	
 	settings.Add(vars.LoggingSettingName, false);
+	settings.Add(vars.LagRemoval, false);
 	settings.Add(vars.SecondPhaseSplitSettingName, false);
 	settings.Add(vars.ThirdPhaseSplitSettingName, false);
 	settings.Add(vars.MissilesSplitSettingName, false);
@@ -163,7 +169,12 @@ shutdown{
 }
 
 isLoading{
-	return vars.loading;					//stops timer when loading is true
+	if(settings[vars.LagRemoval]){
+		return vars.loading || current.Lag == 1;					//stops timer when loading is true or when game is lagging
+	}
+	else{
+		return vars.loading;										//stops timer when loading is true
+	}
 }
 
 split{
@@ -276,8 +287,6 @@ split{
 }
 
 update{
-	
-	
 	//"loadingControl" somtimes goes to 0 in the loading screen and makes timer stutter, so we use the persistant "vars.loading" to turn it on or off.
 	if(current.loadingControl == 65537){ //Turns loading on
 		vars.loading = true;
