@@ -31,7 +31,7 @@ state("YookaLaylee64", "OLD"){
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
-	vars.LagRemoval = "Remove Lags from switching graphics quality";
+	vars.LagRemoval = "Remove Lags from switching graphics quality (needs better pointer)";
 	vars.SecondPhaseSplitSettingName = "Split at start of 2nd phase of CapB fight";
 	vars.ThirdPhaseSplitSettingName = "Split at start of 3rd phase of CapB fight";
 	vars.MissilesSplitSettingName = "Split at start of Missiles of CapB fight";
