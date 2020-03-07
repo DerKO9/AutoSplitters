@@ -1,32 +1,24 @@
-
-//WARNING: Load removing breaks if you try to play Rextro's games from the main menu.
+/*
+	Yooka-Laylee (Released April 11, 2017)
+	ASL originally by DerKO with some revamps by CptBrian ♥
+*/
 
 state("YookaLaylee64", "NEW"){
-	int loadingControl : "mono.dll", 0x00295BC8, 0x20, 0x2B8, 0x0, 0xC8, 0x170, 0x20, 0x64; //Values: Loading = 65537, Selecting file from menu = 65536, Not Loading = 1(after loading any level once) or 0(in the menu on game startup)
-	
-	//OldAddress float CameraZ: "AkSoundEngine.dll", 0x1614E0; //Z coord of the camera
-	//OldAddress float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
-	//OldAddress float CameraX: "AkSoundEngine.dll", 0x1614D8; //X coord of the camera
-	float CameraZ: "AkSoundEngine.dll", 0x198780; //Z coord of the camera
-	float CameraY: "AkSoundEngine.dll", 0x19877C; //Height of the camera
+	byte Loading : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x66;
 	float CameraX: "AkSoundEngine.dll", 0x198778; //X coord of the camera
-	
+	float CameraY: "AkSoundEngine.dll", 0x19877C; //Height of the camera - Note: AkSoundEngine.dll isn't very reliable and these can fail.
+	float CameraZ: "AkSoundEngine.dll", 0x198780; //Z coord of the camera
 	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
-	
-	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xE60, 0x0, 0x18, 0x78, 0x68, 0x70, 0x69;
+	byte Lag : "mono.dll", 0x002645E0, 0x40, 0x1018, 0x0, 0x18, 0x40, 0x18, 0x78, 0x68, 0x70, 0x69;
 }
 
 state("YookaLaylee64", "OLD"){
-	//OldAddress int loadingControl : "mono.dll", 0x00295BC8, 0x20, 0x220, 0x0, 0x64; //Values: Loading = 65537, Selecting file from menu = 65536, Not Loading = 1(after loading any level once) or 0(in the menu on game startup)
-	int loadingControl : "mono.dll", 0x00295BC8, 0x20, 0x2B8, 0x0, 0xC8, 0x170, 0x20, 0x64; //Values: Loading = 65537, Selecting file from menu = 65536, Not Loading = 1(after loading any level once) or 0(in the menu on game startup)
-	
-	float CameraZ: "AkSoundEngine.dll", 0x1614E0; //Z coord of the camera
-	float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
+	byte Loading : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x66;
 	float CameraX: "AkSoundEngine.dll", 0x1614D8; //X coord of the camera
-	
+	float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
+	float CameraZ: "AkSoundEngine.dll", 0x1614E0; //Z coord of the camera
 	int spendablePagies: "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x20, 0x10, 0x2C; //Number of spendable pagies
-	
-	byte Lag : "mono.dll", 0x002645E0, 0x98, 0xE60, 0x0, 0x18, 0x78, 0x68, 0x70, 0x69; //May not work, but final 5 offsets could be the same.
+	byte Lag : "mono.dll", 0x002645E0, 0x40, 0x1018, 0x0, 0x18, 0x40, 0x18, 0x78, 0x68, 0x70, 0x69;
 }
 
 startup{
@@ -81,8 +73,6 @@ init{
 		version = "NEW";
 	}
 	
-    vars.loading = false;				//Current status of loading or not loading
-	vars.loadingOLD = false;			//Old loading is used to detect a change in loading status and then is updated immediatly
 	vars.accumulativeLoads = 0;		//Total number of loads in the run so far
 	
 	vars.accumulativePagies = 0;		//Total number of pagies collected in the run so far
@@ -140,19 +130,18 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"current.loadingControl: " + current.loadingControl.ToString() + "\n" +
-			"loading: " + vars.loading + "\n" +
+			"current.Loading: " + current.Loading.ToString() + "\n" +
 			"current.CameraX: " + current.CameraX.ToString() + "\n" +
 			"current.CameraY: " + current.CameraY.ToString() + "\n" +
 			"current.CameraZ: " + current.CameraZ.ToString() + "\n" +
-			"accumulativePhase3CapBDialogues: " + vars.accumulativePhase3CapBDialogues + "\n");
+			"accumulativePhase3CapBDialogues: " + vars.accumulativePhase3CapBDialogues + "\n" +
+			"current.Lag: " + current.Lag.ToString() + "\n");
 		}
 	});
 }
 
 start{
-	//"loading" should have a value of 665536 as soon as you play file, then have a value of 65537 as it loads
-	if(current.loadingControl == 65536){	//This happens when the file is selected
+	if(current.Loading == 1){	//This happens when the file is selected
 	
 		vars.accumulativeLoads = 0; 		//resets total loads and pagies after starting new run
 		vars.accumulativePagies = 0;		
@@ -170,10 +159,10 @@ shutdown{
 
 isLoading{
 	if(settings[vars.LagRemoval]){
-		return vars.loading || current.Lag == 1;					//stops timer when loading is true or when game is lagging
+		return current.Loading == 1 || current.Lag == 1;					//stops timer when loading is true or when game is lagging
 	}
 	else{
-		return vars.loading;										//stops timer when loading is true
+		return current.Loading == 1;										//stops timer when loading is true
 	}
 }
 
@@ -263,43 +252,31 @@ split{
 	}
 	
 	//Split on Load
-	if((vars.loadingOLD == false) && (vars.loading == true)){       		//If the start of load
+	if(current.Loading == 1 && old.Loading == 0){       					//If the start of load
 		vars.accumulativeLoads++;											//total number of loads increases
 		if(settings[vars.accumulativeLoads.ToString() + " loads"]){ 		//if total loads is a selected number
-			vars.loadingOLD = vars.loading;
 			return true;													//split
 		}
 	}
-	vars.loadingOLD = vars.loading;
 	
 	//Split on start of Quiz Not really needed as most players split on load anyway which is already precise
-	// if(!((old.CameraX >= 0.30 && old.CameraX <= 0.34) && (old.CameraY >= 7.0 && old.CameraY <= 7.25) && (old.CameraZ >= -1.0 && old.CameraZ <= -0.83))
-		// && ((current.CameraX >= 0.30 && current.CameraX <= 0.34) && (current.CameraY >= 7.0 && current.CameraY <= 7.25) && (current.CameraZ >= -1.0 && current.CameraZ <= -0.83))){
-		// vars.Log("\n" + "Quiz Split" + "\n"+
-				// "current.CameraX: " + current.CameraX.ToString() + "\n" +
-				// "current.CameraY: " + current.CameraY.ToString() + "\n" +
-				// "current.CameraZ: " + current.CameraZ.ToString() + "\n" +
-				// "old.CameraX: " + old.CameraX.ToString() + "\n" +
-				// "old.CameraY: " + old.CameraY.ToString() + "\n" +
-				// "old.CameraZ: " + old.CameraZ.ToString() + "\n");
-		// return true;
-	// }
+	/*if(!((old.CameraX >= 0.30 && old.CameraX <= 0.34) && (old.CameraY >= 7.0 && old.CameraY <= 7.25) && (old.CameraZ >= -1.0 && old.CameraZ <= -0.83))
+		 && ((current.CameraX >= 0.30 && current.CameraX <= 0.34) && (current.CameraY >= 7.0 && current.CameraY <= 7.25) && (current.CameraZ >= -1.0 && current.CameraZ <= -0.83))){
+		 vars.Log("\n" + "Quiz Split" + "\n"+
+				 "current.CameraX: " + current.CameraX.ToString() + "\n" +
+				 "current.CameraY: " + current.CameraY.ToString() + "\n" +
+				 "current.CameraZ: " + current.CameraZ.ToString() + "\n" +
+				 "old.CameraX: " + old.CameraX.ToString() + "\n" +
+				 "old.CameraY: " + old.CameraY.ToString() + "\n" +
+				 "old.CameraZ: " + old.CameraZ.ToString() + "\n");
+		 return true;
+	 }*/
 }
 
-update{
-	//"loadingControl" somtimes goes to 0 in the loading screen and makes timer stutter, so we use the persistant "vars.loading" to turn it on or off.
-	if(current.loadingControl == 65537){ //Turns loading on
-		vars.loading = true;
-		
-	}
-	else if(current.loadingControl == 1){ //Turns loading off
-		vars.loading = false;
-	}
-	
+update{	
 	if(current.spendablePagies == old.spendablePagies+1){	       //If pagie is collected, increment the number of pagies collected
 		vars.accumulativePagies = vars.accumulativePagies + 1;
 	}
-	
 }
 
 // var watch = System.Diagnostics.Stopwatch.StartNew();
