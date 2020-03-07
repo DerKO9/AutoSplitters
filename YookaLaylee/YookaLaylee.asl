@@ -141,7 +141,7 @@ init{
 }
 
 start{
-	if(current.Loading == 1){	//This happens when the file is selected
+	if(current.Loading == 1 && old.Loading == 0){	//This happens when the file is selected
 	
 		vars.accumulativeLoads = 0; 		//resets total loads and pagies after starting new run
 		vars.accumulativePagies = 0;		
