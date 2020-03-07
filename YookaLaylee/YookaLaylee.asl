@@ -27,12 +27,12 @@ state("YookaLaylee64", "OLD"){
 
 startup{
 	vars.LoggingSettingName = "Debug Logging (Log files help solve auto-splitting issues)";
-	vars.LagRemoval = "Remove Lags from switching graphics quality (in-game)";
+	vars.LagRemoval = "Remove Lag Times from switching Display Quality (in-game)";
 	vars.SecondPhaseSplitSettingName = "Split at start of 2nd phase of CapB fight";
 	vars.ThirdPhaseSplitSettingName = "Split at start of 3rd phase of CapB fight";
 	vars.MissilesSplitSettingName = "Split at start of Missiles of CapB fight";
-	vars.PagiesSplitSettingName = "Split on total number of pagies (Probably Broken)";
-	vars.LoadsSplitSettingName = "Split on total number of loads (Probably Broken)";
+	vars.PagiesSplitSettingName = "Split on X amount of total Pagies (Possibly Broken)";
+	vars.LoadsSplitSettingName = "Split on X amount of total Loads (Starting File Load excluded)";
 	
 	settings.Add(vars.LoggingSettingName, false);
 	settings.Add(vars.LagRemoval, true);
