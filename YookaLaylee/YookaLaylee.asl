@@ -1,6 +1,6 @@
 /*
 	Yooka-Laylee (Released April 11, 2017)
-	ASL originally by DerKO with some revamps by CptBrian ♥
+	ASL originally by DerKO & 0Seren with some revamps by CptBrian ♥
 */
 
 state("YookaLaylee64", "NEW"){
