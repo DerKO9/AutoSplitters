@@ -35,7 +35,7 @@ startup{
 	vars.LoadsSplitSettingName = "Split on total number of loads (Probably Broken)";
 	
 	settings.Add(vars.LoggingSettingName, false);
-	settings.Add(vars.LagRemoval, false);
+	settings.Add(vars.LagRemoval, true);
 	settings.Add(vars.SecondPhaseSplitSettingName, false);
 	settings.Add(vars.ThirdPhaseSplitSettingName, false);
 	settings.Add(vars.MissilesSplitSettingName, false);
@@ -135,6 +135,8 @@ init{
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"current.Loading: " + current.Loading.ToString() + "\n" +
+			"current.LoadingFade: " + current.LoadingFade.ToString() + "\n" +
+			"current.LoadingBase: " + current.LoadingBase.ToString() + "\n" +
 			"current.CameraX: " + current.CameraX.ToString() + "\n" +
 			"current.CameraY: " + current.CameraY.ToString() + "\n" +
 			"current.CameraZ: " + current.CameraZ.ToString() + "\n" +
