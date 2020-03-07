@@ -5,6 +5,8 @@
 
 state("YookaLaylee64", "NEW"){
 	byte Loading : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x66;
+	byte LoadingFade : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x65; //Not sure what this byte really is, not consistent for fades.
+	byte LoadingBase : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x64;
 	float CameraX: "AkSoundEngine.dll", 0x198778; //X coord of the camera
 	float CameraY: "AkSoundEngine.dll", 0x19877C; //Height of the camera - Note: AkSoundEngine.dll isn't very reliable and these can fail.
 	float CameraZ: "AkSoundEngine.dll", 0x198780; //Z coord of the camera
@@ -14,6 +16,8 @@ state("YookaLaylee64", "NEW"){
 
 state("YookaLaylee64", "OLD"){
 	byte Loading : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x66;
+	byte LoadingFade : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x65; //Not sure what this byte really is, not consistent for fades.
+	byte LoadingBase : "YookaLaylee64.exe", 0x012C5790, 0x8, 0x10, 0x28, 0x18, 0x20, 0x64;
 	float CameraX: "AkSoundEngine.dll", 0x1614D8; //X coord of the camera
 	float CameraY: "AkSoundEngine.dll", 0x1614DC; //Height of the camera
 	float CameraZ: "AkSoundEngine.dll", 0x1614E0; //Z coord of the camera
@@ -141,7 +145,7 @@ init{
 }
 
 start{
-	if(current.Loading == 1 && old.Loading == 0){	//This happens when the file is selected
+	if(current.Loading == 1 && current.LoadingBase == 0){	//This happens when the file is selected
 	
 		vars.accumulativeLoads = 0; 		//resets total loads and pagies after starting new run
 		vars.accumulativePagies = 0;		
@@ -159,10 +163,10 @@ shutdown{
 
 isLoading{
 	if(settings[vars.LagRemoval]){
-		return current.Loading == 1 || current.Lag == 1;					//stops timer when loading is true or when game is lagging
+		return current.Loading == 1 && current.LoadingBase == 1 || current.Lag == 1;		//stops timer when loading is true or when game is lagging
 	}
 	else{
-		return current.Loading == 1;										//stops timer when loading is true
+		return current.Loading == 1 && current.LoadingBase == 1;							//stops timer when loading is true
 	}
 }
 
