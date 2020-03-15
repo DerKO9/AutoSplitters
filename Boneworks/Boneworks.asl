@@ -3,6 +3,7 @@
 state("BONEWORKS"){ //This should default to CurrentUpdate values
 	int currentLevel : "GameAssembly.dll", 0x01C80340, 0xB8, 0x1F0;
 	int menuButtonCount : "UnityPlayer.dll", 0x014F1218, 0xAA8, 0x160, 0xB8, 0x870, 0x18; //Number of menu buttons displayed
+	int arenaCrabletsKilled : "GameAssembly.dll", 0x01C78E30, 0x8C0, 0x350
 }
 
 startup{
@@ -98,7 +99,8 @@ init{
 			"loading: " + vars.loading.Current.ToString() + "\n" +
 			"loadCount: " + vars.loadCount.ToString() + "\n" +
 			"currentLevel: " + current.currentLevel.ToString() + "\n" +
-			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n");
+			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n" +
+			"arenaCrabletsKilled: " + current.arenaCrabletsKilled.ToString() + "\n");
 		}
 	});
 }
@@ -144,6 +146,10 @@ split{
 		}
 		vars.loadCount++;
 		vars.Log("-Splitting-\n");
+		return true;
+	}
+	
+	if(current.arenaCrabletsKilled == 100 && old.arenaCrabletsKilled != 100){
 		return true;
 	}
 }
