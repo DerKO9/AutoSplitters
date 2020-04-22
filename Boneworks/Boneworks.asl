@@ -7,7 +7,7 @@ state("BONEWORKS"){ //This should default to CurrentUpdate values
 }
 
 startup{
-	vars.scanTarget = new SigScanTarget(-84, "46 03 80 BF 0A D2 CC BD");
+	vars.scanTarget = new SigScanTarget(-92, "46 03 80 BF 0A D2 CC BD");
 	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
