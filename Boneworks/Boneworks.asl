@@ -2,7 +2,7 @@
 
 state("BONEWORKS"){ //This should default to CurrentUpdate values
 	int currentLevel : "GameAssembly.dll", 0x01E75D08, 0xB8, 0x590;
-	int menuButtonCount : "GameAssembly.dll", 0x01E97570, 0x438, 0x5F8; //Number of menu buttons displayed
+	int menuButtonCount : "GameAssembly.dll", 0x01E753B8, 0xB8, 0x750, 0x18; //Number of menu buttons displayed
 	int arenaCrabletsKilled : "GameAssembly.dll", 0x01C78E30, 0x8C0, 0x350
 }
 
