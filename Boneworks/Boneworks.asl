@@ -1,8 +1,13 @@
-//Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
+// Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
+
+// currentLevel: The id of the current level
+// 	Main Menu = 1, BreakRoom = 3, Museum = 4, Streets = 5, Runoff = 6, Sewers = 7, Warehouse = 8, Central Station = 9,
+//	Tower = 10, Time Tower = 11, Dungeon = 13, Arena = 14, Throne Room = 15
+// MeunButtonCount: The number of buttons displayed in the menu. There are 8 buttons displayed when first opening the "Scene Select" menu.
 
 state("BONEWORKS"){ //This should default to CurrentUpdate values
-	int currentLevel : "GameAssembly.dll", 0x01E75D08, 0xB8, 0x590;
-	int menuButtonCount : "GameAssembly.dll", 0x01E753B8, 0xB8, 0x750, 0x18; //Number of menu buttons displayed
+	int currentLevel : "GameAssembly.dll", 0x01E7E4E0, 0xB8, 0x590;
+	int menuButtonCount : "GameAssembly.dll", 0x01E6A7F8, 0xB8, 0x20, 0x18;
 	int arenaCrabletsKilled : "GameAssembly.dll", 0x01C78E30, 0x8C0, 0x350
 }
 
