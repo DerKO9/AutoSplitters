@@ -1,4 +1,4 @@
-// Help is welcome! https://discord.gg/mjmpUR8 #speedrunning-disscusion and ping @DerKO
+// Help is welcome! https://discord.gg/MW2zUcV2Fv ping @DerKO
 
 // currentLevel: The id of the current level
 // 	Main Menu = 1, BreakRoom = 3, Museum = 4, Streets = 5, Runoff = 6, Sewers = 7, Warehouse = 8, Central Station = 9,
@@ -12,7 +12,7 @@ state("BONEWORKS"){ //This should default to CurrentUpdate values
 }
 
 startup{
-	vars.scanTarget = new SigScanTarget(-92, "46 03 80 BF 0A D2 CC BD");
+	vars.scanTarget = new SigScanTarget(-660, "A8 62 ?? ?? ?? 7F 00 00 F8 62"); //A8 62 ?? ?? ?? 7F 00 00 F8 62 ?? ?? ?? 7F 00 00 A0 63 ?? ?? ?? 7F 00 00 90 3E ?? ?? ?? 7F 00 00 ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 12 00 00 00 00 00 00 00 1F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 13
 	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
