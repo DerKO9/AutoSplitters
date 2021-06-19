@@ -1,4 +1,4 @@
-// Help is welcome! https://discord.gg/MW2zUcV2Fv ping @DerKO
+// If anyone wants to take over maintaince for this ASL, that would be GREAT! https://discord.gg/MW2zUcV2Fv ping @DerKO
 
 // currentLevel: The id of the current level
 // 	Main Menu = 1, BreakRoom = 3, Museum = 4, Streets = 5, Runoff = 6, Sewers = 7, Warehouse = 8, Central Station = 9,
@@ -8,12 +8,10 @@
 state("BONEWORKS"){ //This should default to CurrentUpdate values
 	int currentLevel : "GameAssembly.dll", 0x01E7E4E0, 0xB8, 0x590;
 	int menuButtonCount : "GameAssembly.dll", 0x01E6A7F8, 0xB8, 0x20, 0x18;
-	int arenaCrabletsKilled : "GameAssembly.dll", 0x01C78E30, 0x8C0, 0x350
+	int loading : "vrclient_x64.dll", 0x3D5C84;
 }
 
 startup{
-	vars.scanTarget = new SigScanTarget(-419, "3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C 20");
-	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
 	
@@ -33,24 +31,6 @@ init{
 	vars.timerSecond = 0;
 	vars.timerMinuteOLD = -1;
 	vars.timerMinute = 0;
-
-	ProcessModuleWow64Safe module = modules.SingleOrDefault(m => m.FileName.Contains("vrclient_x64"));
-	if (module == null) {
-		Thread.Sleep(10);
-        throw new Exception("vrclient_x64 module not found");
-	}
-	var scanner = new SignatureScanner(game, module.BaseAddress, module.ModuleMemorySize);
-	var ptr = scanner.Scan(vars.scanTarget);
-	if (ptr == IntPtr.Zero) {
-        Thread.Sleep(10);
-        throw new Exception("AOB not found");
-    }
-
-    vars.loading = new MemoryWatcher<byte>(ptr);
-
-    vars.watchers = new MemoryWatcherList() {
-        vars.loading,
-    };
 
 	vars.loadCount = 0;
 	
@@ -101,11 +81,10 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"loading: " + vars.loading.Current.ToString() + "\n" +
+			"loading: " + current.loading.ToString() + "\n" +
 			"loadCount: " + vars.loadCount.ToString() + "\n" +
 			"currentLevel: " + current.currentLevel.ToString() + "\n" +
-			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n" +
-			"arenaCrabletsKilled: " + current.arenaCrabletsKilled.ToString() + "\n");
+			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n");
 		}
 	});
 }
@@ -122,11 +101,11 @@ reset{
 }
 
 isLoading{
-	return vars.loading.Current == 1; //stops timer when loading is 1
+	return current.loading == 1; //stops timer when loading is 1
 }
 
 start{
-	if(vars.loading.Current == 1 && vars.loading.Old == 0){
+	if(current.loading == 1 && old.loading == 0){
 		vars.loadCount = 0;
 		vars.Log("-Starting-\n");
 		return true;
@@ -136,7 +115,7 @@ start{
 split{
 	vars.PeriodicLogging();
 	
-	if(vars.loading.Current == 1 && vars.loading.Old == 0 && settings[vars.SplitOnLoadSettingName]){
+	if(current.loading == 1 && old.loading == 0 && settings[vars.SplitOnLoadSettingName]){
 		if(settings[vars.SkipSplitOnFirstLoadingScreenName]){
 			if(vars.loadCount == 0){
 				vars.loadCount++;
@@ -153,14 +132,6 @@ split{
 		vars.Log("-Splitting-\n");
 		return true;
 	}
-	
-	if(current.arenaCrabletsKilled == 100 && old.arenaCrabletsKilled != 100){
-		return true;
-	}
-}
-
-update{
-	vars.watchers.UpdateAll(game);
 }
 
 // Performance Tool:
