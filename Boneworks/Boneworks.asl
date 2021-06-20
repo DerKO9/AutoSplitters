@@ -8,10 +8,11 @@
 state("BONEWORKS"){ //This should default to CurrentUpdate values
 	int currentLevel : "GameAssembly.dll", 0x01E7E4E0, 0xB8, 0x590;
 	int menuButtonCount : "GameAssembly.dll", 0x01E6A7F8, 0xB8, 0x20, 0x18;
-	int loading : "vrclient_x64.dll", 0x3D5C84;
 }
 
 startup{
+	vars.scanTarget = new SigScanTarget(0, "00 00 00 00 00 00 00 00 38 E4 ?? ?? ?? 02 00 00 38 E4 ?? ?? ?? 02 00 00 00 00 00 00 00 00 00 00 00 00 78 1B");
+	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
 	
@@ -31,6 +32,22 @@ init{
 	vars.timerSecond = 0;
 	vars.timerMinuteOLD = -1;
 	vars.timerMinute = 0;
+	
+	var ptr = IntPtr.Zero;
+	foreach (var page in game.MemoryPages(true).Take(500)){
+		var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
+		if (ptr == IntPtr.Zero) {
+			ptr = scanner.Scan(vars.scanTarget);
+		} else {
+			break;
+		}
+	}
+
+    vars.loading = new MemoryWatcher<byte>(ptr);
+
+    vars.watchers = new MemoryWatcherList() {
+        vars.loading,
+    };
 
 	vars.loadCount = 0;
 	
@@ -81,7 +98,7 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"loading: " + current.loading.ToString() + "\n" +
+			"loading: " + (ptr == IntPtr.Zero ? "AOB not found" : vars.loading.Current.ToString()) + "\n" +
 			"loadCount: " + vars.loadCount.ToString() + "\n" +
 			"currentLevel: " + current.currentLevel.ToString() + "\n" +
 			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n");
@@ -101,11 +118,11 @@ reset{
 }
 
 isLoading{
-	return current.loading == 1; //stops timer when loading is 1
+	return vars.loading.Current == 1; //stops timer when loading is 1
 }
 
 start{
-	if(current.loading == 1 && old.loading == 0){
+	if(vars.loading.Current == 1 && vars.loading.Old == 0){
 		vars.loadCount = 0;
 		vars.Log("-Starting-\n");
 		return true;
@@ -115,7 +132,7 @@ start{
 split{
 	vars.PeriodicLogging();
 	
-	if(current.loading == 1 && old.loading == 0 && settings[vars.SplitOnLoadSettingName]){
+	if(vars.loading.Current == 1 && vars.loading.Old == 0 && settings[vars.SplitOnLoadSettingName]){
 		if(settings[vars.SkipSplitOnFirstLoadingScreenName]){
 			if(vars.loadCount == 0){
 				vars.loadCount++;
@@ -132,6 +149,10 @@ split{
 		vars.Log("-Splitting-\n");
 		return true;
 	}
+}
+
+update{
+	vars.watchers.UpdateAll(game);
 }
 
 // Performance Tool:
