@@ -8,7 +8,7 @@
 state("BONEWORKS"){ //This should default to CurrentUpdate values
 	int currentLevel : "GameAssembly.dll", 0x01E7E4E0, 0xB8, 0x590;
 	int menuButtonCount : "GameAssembly.dll", 0x01E6A7F8, 0xB8, 0x20, 0x18;
-	int loading : "UnityPlayer.dll", 0x01555340, 0x18, 0x40, 0x80, 0x100, 0xC30;
+	int loading : "vrclient_x64.dll", 0x3D5C84;
 }
 
 startup{
