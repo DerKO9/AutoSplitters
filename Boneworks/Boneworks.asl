@@ -11,7 +11,7 @@ state("BONEWORKS"){ //This should default to CurrentUpdate values
 }
 
 startup{
-	vars.scanTarget = new SigScanTarget(0, "00 00 00 00 00 00 00 00 38 E4 ?? ?? ?? 02 00 00 38 E4 ?? ?? ?? 02 00 00 00 00 00 00 00 00 00 00 00 00 78 1B");
+	vars.scanTarget = new SigScanTarget(-419, "3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C ?? ?? ?? 3C 20");
 	
 	vars.logFileName = "BONEWORKS.log";
 	vars.maxFileSize = 4000000;
@@ -32,16 +32,18 @@ init{
 	vars.timerSecond = 0;
 	vars.timerMinuteOLD = -1;
 	vars.timerMinute = 0;
-	
-	var ptr = IntPtr.Zero;
-	foreach (var page in game.MemoryPages(true).Take(500)){
-		var scanner = new SignatureScanner(game, page.BaseAddress, (int)page.RegionSize);
-		if (ptr == IntPtr.Zero) {
-			ptr = scanner.Scan(vars.scanTarget);
-		} else {
-			break;
-		}
+
+	ProcessModuleWow64Safe module = modules.SingleOrDefault(m => m.FileName.Contains("vrclient_x64"));
+	if (module == null) {
+		Thread.Sleep(10);
+        throw new Exception("vrclient_x64 module not found");
 	}
+	var scanner = new SignatureScanner(game, module.BaseAddress, module.ModuleMemorySize);
+	var ptr = scanner.Scan(vars.scanTarget);
+	if (ptr == IntPtr.Zero) {
+        Thread.Sleep(10);
+        throw new Exception("AOB not found");
+    }
 
     vars.loading = new MemoryWatcher<byte>(ptr);
 
@@ -98,7 +100,7 @@ init{
 			
 			vars.Log("RealTime: "+timer.CurrentTime.RealTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
 			"GameTime: "+timer.CurrentTime.GameTime.Value.ToString(@"hh\:mm\:ss") + "\n" +
-			"loading: " + (ptr == IntPtr.Zero ? "AOB not found" : vars.loading.Current.ToString()) + "\n" +
+			"loading: " + vars.loading.Current.ToString() + "\n" +
 			"loadCount: " + vars.loadCount.ToString() + "\n" +
 			"currentLevel: " + current.currentLevel.ToString() + "\n" +
 			"menuButtonCount: " + current.menuButtonCount.ToString() + "\n");
