@@ -102,6 +102,26 @@ state("YLILWin64", "Steam 1.04") {
 	byte playerControl  : "mono.dll", 0x2675E0, 0xA0, 0xC28, 0x8, 0x20, 0x30, 0x20, 0x18, 0x78, 0x50, 0x58, 0xA6;
 	int Health          : "mono.dll", 0x2675E0, 0xA0, 0xC40, 0x38, 0x20, 0x30, 0x20, 0x18, 0x158, 0x38;
 	int beeTotal        : "mono.dll", 0x268180, 0x50, 0xCE0, 0x20, 0x50, 0x30, 0x8, 0x18, 0x0, 0x2C; // Potential consistency problem in 1.04?
+	// Hard Mode Additions:
+	int ChkMtDeaths     : "mono.dll", 0x264A28, 0x1C0, 0xE10, 0x3C8, 0x300, 0x58, 0x198, 0x18, 0x10, 0x30, 0x30, 0x68, 0x28, 0x3C; // Death Count for always-current CheckMate (to prevent warping)
+	int MaxHealth       : "mono.dll", 0x2675E0, 0xA0, 0xC40, 0x38, 0x20, 0x30, 0x20, 0x18, 0x158, 0x34; // Prevents Bell interaction when set to 1 (2=Laylee, 1=Yooka, 0=Dead)
+	long EquippedTonic1 : "mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x20;
+	long EquippedTonic2 : "mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x28;
+	long EquippedTonic3 : "mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x30;
+	long EquippedTonic4 : "mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x38;
+	long IDLessChkMts   : "mono.dll", 0x2675E0, 0x40, 0x138, 0x20, 0x20, 0x20, 0x50, 0xB8, 0x38; // Stored Tonic IDs (randomized) to equip
+	long IDRollEvFaster : "mono.dll", 0x2675E0, 0x40, 0x138, 0x20, 0x20, 0x20, 0x50, 0xB8, 0xA8;
+	long IDSpotlight    : "mono.dll", 0x2675E0, 0x40, 0x138, 0x20, 0x20, 0x20, 0x50, 0xB8, 0x180;
+	long IDGooglyEyes   : "mono.dll", 0x2675E0, 0x40, 0x138, 0x20, 0x20, 0x20, 0x50, 0xB8, 0x80;
+	long IDDerorrim     : "mono.dll", 0x2675E0, 0x40, 0x138, 0x20, 0x20, 0x20, 0x50, 0xB8, 0x130;
+	long IDChamColors   : "mono.dll", 0x2675E0, 0x40, 0x138, 0x20, 0x20, 0x20, 0x50, 0xB8, 0x1C8;
+	byte ULLessChkMts   : "mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x38, 0x18; // Tonic Unlock Flags (forced tonics must also be "found" to prevent a hard-lock)
+	byte ULRollEvFaster : "mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0xA8, 0x18;
+	byte ULSpotlight    : "mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x180, 0x18;
+	byte ULGooglyEyes   : "mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x80, 0x18;
+	byte ULDerorrim     : "mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x130, 0x18;
+	byte ULChamColors   : "mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x1C8, 0x18;
+	int DLCTonics       : "mono.dll", 0x2675E0, 0x40, 0x148, 0x18, 0x500, 0x3E8, 0x0, 0x48; // Unlocks DLC tonics when set to 1 (for current file session only)
 }
 
 state("YLILWin64", "EGS 1.04") {
@@ -122,6 +142,7 @@ state("YLILWin64", "EGS 1.04") {
 }
 
 startup{
+	vars.HardMode = "HARD Mode game modification — All you need! (info on forums)";
 	vars.ILRunsMode = "IL Mode: Start on control, Auto-Reset, Split on hive break";
 	vars.TutStart = "TUTORIAL Entry Start";
 	vars.LairSplits = "LAIR Splits on Entry, Sections, Fights & Ending";
@@ -135,6 +156,8 @@ startup{
 	vars.AltLoadRemove = "Alternate Load Removal Method";
 	
 	
+	settings.Add(vars.HardMode, false, vars.HardMode);
+		settings.Add("NoSpotlight", false, "Replace Spotlight with Chameleon Colors (B swaps!)", vars.HardMode);
 	settings.Add(vars.ILRunsMode, false);
 	settings.Add(vars.TutStart, false);
 	settings.Add(vars.LairSplits, false);
@@ -157,7 +180,7 @@ startup{
 	settings.Add("Technical", true, "Technical");
 		settings.Add("Logging", false, "Debug Logging (Log files help solve auto-splitting issues)", "Technical");
 		settings.Add("TestDelaysRestart", false, "Test delays: Transitions to Player Control. (Restarts & OW warps)", "Technical");
-		settings.Add("TestDelaysBeeBreakToLoad", false, "Test delays: IL Bee Break to Loading", "Technical");	
+		settings.Add("TestDelaysBeeBreakToLoad", false, "Test delays: IL Bee Break to Loading", "Technical");
 }
 
 init{
@@ -515,6 +538,70 @@ update{
 			"Level: "          + current.Level + "\n" +
 			"LevelLoad: "      + current.LevelLoad + "\n" +
 			"Health: "         + current.Health + "\n");
+	}
+	
+	// Hard Mode
+	if (settings[vars.HardMode]){
+		if (current.Level == 10 && current.Health != 2){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0xC40, 0x38, 0x20, 0x30, 0x20, 0x18, 0x158, 0x38).DerefOffsets(game, out temp); // Health pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((int)2) ); // Return Laylee only in the overworld
+		}
+		if (current.Level != 10 && current.Health != 1){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0xC40, 0x38, 0x20, 0x30, 0x20, 0x18, 0x158, 0x38).DerefOffsets(game, out temp); // Health pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((int)1) ); // Remove Laylee when not in Overworld
+		}
+		if (current.MaxHealth != 1){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0xC40, 0x38, 0x20, 0x30, 0x20, 0x18, 0x158, 0x34).DerefOffsets(game, out temp); // MaxHealth pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((int)1) ); // Set Max Health to 1 to make Laylee Bells un-interactable
+		}
+		if (current.ULLessChkMts != 1 || current.ULRollEvFaster != 1 || current.ULSpotlight != 1 || current.ULGooglyEyes != 1 || current.ULDerorrim != 1 || current.ULChamColors != 1){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x38, 0x18).DerefOffsets(game, out temp); // ULLessChkMts pointer
+			game.WriteBytes((IntPtr)temp, new byte[] {1} ); // Unlocks Tonic
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0xA8, 0x18).DerefOffsets(game, out temp); // ULRollEvFaster pointer
+			game.WriteBytes((IntPtr)temp, new byte[] {1} ); // Unlocks Tonic
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x180, 0x18).DerefOffsets(game, out temp); // ULSpotlight pointer
+			game.WriteBytes((IntPtr)temp, new byte[] {1} ); // Unlocks Tonic
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x80, 0x18).DerefOffsets(game, out temp); // ULGooglyEyes pointer
+			game.WriteBytes((IntPtr)temp, new byte[] {1} ); // Unlocks Tonic
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x130, 0x18).DerefOffsets(game, out temp); // ULDerorrim pointer
+			game.WriteBytes((IntPtr)temp, new byte[] {1} ); // Unlocks Tonic
+			new DeepPointer("mono.dll", 0x2675E0, 0xA0, 0x340, 0xA8, 0x28, 0x60, 0x10, 0x1C8, 0x18).DerefOffsets(game, out temp); // ULChamColors pointer
+			game.WriteBytes((IntPtr)temp, new byte[] {1} ); // Unlocks Tonic
+		}
+		if (current.ChkMtDeaths > 0){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x264A28, 0x1C0, 0xE10, 0x3C8, 0x300, 0x58, 0x198, 0x18, 0x10, 0x30, 0x30, 0x68, 0x28, 0x3C).DerefOffsets(game, out temp); // ChkMtDeaths pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((int)0) ); // Keep current CheckMate's death count to 0 to prevent warping
+		}
+		if (current.EquippedTonic1 != current.IDLessChkMts){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x20).DerefOffsets(game, out temp); // EquippedTonic1 pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((long)current.IDLessChkMts) ); // Equips Tonic if it isn't equipped
+		}
+		if (current.EquippedTonic2 != current.IDRollEvFaster){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x28).DerefOffsets(game, out temp); // EquippedTonic2 pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((long)current.IDRollEvFaster) ); // Equips Tonic if it isn't equipped
+		}
+		if (current.EquippedTonic3 != current.IDSpotlight && !settings["NoSpotlight"]){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x30).DerefOffsets(game, out temp); // EquippedTonic3 pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((long)current.IDSpotlight) ); // Equips Tonic if it isn't equipped
+		}
+		if (current.EquippedTonic3 != current.IDChamColors && settings["NoSpotlight"]){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x30).DerefOffsets(game, out temp); // EquippedTonic3 pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((long)current.IDChamColors) ); // Equips Tonic if it isn't equipped
+		}
+		if (current.EquippedTonic4 != current.IDGooglyEyes){
+			IntPtr temp;
+			new DeepPointer("mono.dll", 0x2675E0, 0x90, 0x10, 0xF88, 0x40, 0x0, 0x30, 0x8, 0x18, 0x18, 0x20, 0x38).DerefOffsets(game, out temp); // EquippedTonic4 pointer
+			game.WriteBytes((IntPtr)temp, BitConverter.GetBytes((long)current.IDGooglyEyes) ); // Equips Tonic if it isn't equipped
+		}
 	}
 }
 
